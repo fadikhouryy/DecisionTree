@@ -1,7 +1,13 @@
 import pandas as pd
-df = pd.read_csv(r'C:\Users\Trainee.MOMEN-KITTANEH\Desktop\Customer_Behaviour.csv')
-#print(df.head())
 from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+from sklearn import metrics
+
+df = pd.read_csv(r' C:\Users\Trainee.MOMEN-KITTANEH\Desktop\Customer_Behaviour.csv')
+#print(df.head())
+
 encoder = LabelEncoder()
 cat_col = ['Gender']
 for cols in cat_col:
@@ -13,16 +19,19 @@ features = ['Gender','Age','EstimatedSalary']
 target =['Purchased']
 
 X=df[features]
-#print(X)
+
 y=df[target]
-#print(y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=42)
 
-from sklearn.tree import DecisionTreeClassifier
+
 tree = DecisionTreeClassifier()
-tree = tree.fit(X,y)
-import matplotlib.pyplot as plt
-#from sklearn import tree
-#tree.plot_tree(tree, feature_names=features)
-print(tree.score(X,y))
 
-print(tree.predict([[0,20,20000]]))
+tree = tree.fit(X_train,y_train)
+
+predicted=tree.predict(X_test)
+
+confusion_matrix = metrics.confusion_matrix(y_test, predicted)
+cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = [False, True])
+
+cm_display.plot()
+plt.show()
