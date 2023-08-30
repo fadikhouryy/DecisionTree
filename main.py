@@ -6,14 +6,13 @@ import matplotlib.pyplot as plt
 from sklearn import metrics
 
 df = pd.read_csv(r' C:\Users\Trainee.MOMEN-KITTANEH\Desktop\Customer_Behaviour.csv')
-#print(df.head())
 
 encoder = LabelEncoder()
 cat_col = ['Gender']
 for cols in cat_col:
     df[cols] = encoder.fit_transform(df[cols])
 
-#print(df.info())
+
 
 features = ['Gender','Age','EstimatedSalary']
 target =['Purchased']
