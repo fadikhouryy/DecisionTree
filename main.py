@@ -4,8 +4,16 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn import metrics
+import sys
 
-df = pd.read_csv(r' C:\Users\Trainee.MOMEN-KITTANEH\Desktop\Customer_Behaviour.csv')
+my_csv_file = sys.argv[1]
+with open(my_csv_file,'r') as f:
+    f_cont = f.read()
+
+df=pd.read_csv(my_csv_file)
+
+
+
 
 encoder = LabelEncoder()
 cat_col = ['Gender']
@@ -34,3 +42,5 @@ cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix,
 
 cm_display.plot()
 plt.show()
+
+
