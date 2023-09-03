@@ -6,41 +6,46 @@ import matplotlib.pyplot as plt
 from sklearn import metrics
 import sys
 
-my_csv_file = sys.argv[1]
-with open(my_csv_file,'r') as f:
-    f_cont = f.read()
 
+my_csv_file = sys.argv[1]
 df=pd.read_csv(my_csv_file)
 
 
-
-
 encoder = LabelEncoder()
-cat_col = ['Gender']
-for cols in cat_col:
+cat_coll = ['Gender']
+for cols in cat_coll:
     df[cols] = encoder.fit_transform(df[cols])
 
+
+
+test_file = sys.argv[2]
+test = pd.read_csv(test_file)
+for cols in cat_coll:
+    test[cols] = encoder.fit_transform(test[cols])
+drop = test.drop(["User ID",'Purchased'],axis='columns')
 
 
 features = ['Gender','Age','EstimatedSalary']
 target =['Purchased']
 
 X=df[features]
-
 y=df[target]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=42)
 
 
 tree = DecisionTreeClassifier()
+tree = tree.fit(X,y)
 
-tree = tree.fit(X_train,y_train)
+predicted=tree.predict(drop)
+predicted=pd.DataFrame(predicted)
 
-predicted=tree.predict(X_test)
+user = test['User ID']
+user = pd.DataFrame(user)
 
-confusion_matrix = metrics.confusion_matrix(y_test, predicted)
-cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = [False, True])
+result = pd.concat([user, predicted], axis=1, join="inner")
+print(result)
 
-cm_display.plot()
-plt.show()
+f = open("demofile2.txt", "a")
+for i in list(result):
+   f.write(f"{i} \n")
 
 
