@@ -35,14 +35,19 @@ y=df[target]
 tree = DecisionTreeClassifier()
 tree = tree.fit(X,y)
 
-predicted=tree.predict(drop)
-predicted=pd.DataFrame(predicted)
 
-user = test['User ID']
-user = pd.DataFrame(user)
 
-result = pd.concat([user, predicted], axis=1, join="inner")
-print(result)
+
+
+for i in test['User ID']:
+        predicted = tree.predict(drop)
+
+
+predicted = pd.DataFrame(predicted)
+
+
+result=(test['User ID'],predicted)
+#print(result)
 
 f = open("demofile2.txt", "a")
 for i in list(result):
