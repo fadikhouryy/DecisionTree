@@ -6,16 +6,13 @@ import matplotlib.pyplot as plt
 from sklearn import metrics
 import sys
 
-
 my_csv_file = sys.argv[1]
 df=pd.read_csv(my_csv_file)
-
 
 encoder = LabelEncoder()
 cat_coll = ['Gender']
 for cols in cat_coll:
     df[cols] = encoder.fit_transform(df[cols])
-
 
 
 test_file = sys.argv[2]
@@ -44,16 +41,24 @@ for i in user.iloc[:100]:
     predicted = tree.predict(drop.iloc[:100])
     predicted = pd.DataFrame(predicted)
     result = pd.concat([user, predicted], axis=1, join="inner")
-print(result)
+
+
+result.rename(columns = {0:'class'}, inplace = True)
 
 
 
+result.set_index('User ID' , inplace=True)
+
+def get_user(data_frame,index):
+    row = data_frame.loc[index]
+    return row
+
+print(get_user(result,15786993))
 
 
 
-
-f = open("demofile2.txt", "a")
-for i in list(result):
-   f.write(f"{i} \n")
+#f = open("demofile2.txt", "a")
+#for i in list(result):
+#   f.write(f"{i} \n")
 
 
