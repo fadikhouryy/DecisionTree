@@ -22,7 +22,7 @@ test_file = sys.argv[2]
 test = pd.read_csv(test_file)
 for cols in cat_coll:
     test[cols] = encoder.fit_transform(test[cols])
-drop = test.drop(["User ID",'Purchased'],axis='columns')
+
 
 
 features = ['Gender','Age','EstimatedSalary']
@@ -37,17 +37,19 @@ tree = tree.fit(X,y)
 
 
 
+user = test.drop(['Gender','Age','EstimatedSalary','Purchased'], axis='columns')
 
-
-for i in test['User ID']:
-        predicted = tree.predict(drop)
-
+for i in user.iloc[:100]:
+    drop = test.drop(["User ID", 'Purchased'], axis='columns')
+    predicted = tree.predict(drop.iloc[:100])
 
 predicted = pd.DataFrame(predicted)
+result = (user,predicted)
 
 
-result=(test['User ID'],predicted)
-#print(result)
+
+
+
 
 f = open("demofile2.txt", "a")
 for i in list(result):
