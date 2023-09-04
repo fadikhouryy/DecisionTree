@@ -43,9 +43,8 @@ for i in user.iloc[:100]:
     drop = test.drop(["User ID", 'Purchased'], axis='columns')
     predicted = tree.predict(drop.iloc[:100])
     predicted = pd.DataFrame(predicted)
-    result = (user,predicted)
-    print(result)
-
+    result = pd.concat([user, predicted], axis=1, join="inner")
+print(result)
 
 
 
