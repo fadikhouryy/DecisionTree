@@ -42,9 +42,11 @@ user = test.drop(['Gender','Age','EstimatedSalary','Purchased'], axis='columns')
 for i in user.iloc[:100]:
     drop = test.drop(["User ID", 'Purchased'], axis='columns')
     predicted = tree.predict(drop.iloc[:100])
+    predicted = pd.DataFrame(predicted)
+    result = (user,predicted)
+    print(result)
 
-predicted = pd.DataFrame(predicted)
-result = (user,predicted)
+
 
 
 
