@@ -25,40 +25,34 @@ for cols in cat_coll:
 features = ['Gender','Age','EstimatedSalary']
 target =['Purchased']
 
-X=df[features]
-y=df[target]
-
-
-tree = DecisionTreeClassifier()
-tree = tree.fit(X,y)
+X = df[features]
+y = df[target]
 
 
 
-user = test.drop(['Gender','Age','EstimatedSalary','Purchased'], axis='columns')
 
-for i in user.iloc[:100]:
-    drop = test.drop(["User ID", 'Purchased'], axis='columns')
-    predicted = tree.predict(drop.iloc[:100])
-    predicted = pd.DataFrame(predicted)
-    result = pd.concat([user, predicted], axis=1, join="inner")
+def model_fit(user,featurs,target,test):
+    from sklearn.tree import DecisionTreeClassifier
+    tree = DecisionTreeClassifier()
+    tree = tree.fit(featurs,target)
+    for i in user.iloc[:100]:
+        predicted_value = tree.predict(test.iloc[:100])
+    predicted_value = pd.DataFrame(predicted_value)
+    clas =  pd.concat([user , predicted_value],axis=1,join="inner")
+    clas.rename(columns={0: 'class'}, inplace=True)
+    return clas
 
+user = test.drop(['Gender' , 'Age' , 'EstimatedSalary' , 'Purchased'], axis='columns')
+drop = test.drop(['User ID' , 'Purchased'], axis='columns')
 
-result.rename(columns = {0:'class'}, inplace = True)
-
-
-
-result.set_index('User ID' , inplace=True)
-
-def get_user(data_frame,index):
-    row = data_frame.loc[index]
-    return row
-
-print(get_user(result,15786993))
+print(model_fit(user,X,y,drop))
 
 
 
-#f = open("demofile2.txt", "a")
-#for i in list(result):
-#   f.write(f"{i} \n")
+
+
+
+
+
 
 
