@@ -25,27 +25,26 @@ for cols in cat_coll:
 features = ['Gender','Age','EstimatedSalary']
 target =['Purchased']
 
-X = df[features]
-y = df[target]
+X=df[features]
+y= df[target]
 
 
 
-
-def model_fit(user,featurs,target,test):
-    from sklearn.tree import DecisionTreeClassifier
+def model_fit(X,y,Gender,Age,EstimatedSalary,test):
     tree = DecisionTreeClassifier()
-    tree = tree.fit(featurs,target)
-    for i in user.iloc[:100]:
-        predicted_value = tree.predict(test.iloc[:100])
-    predicted_value = pd.DataFrame(predicted_value)
-    clas =  pd.concat([user , predicted_value],axis=1,join="inner")
-    clas.rename(columns={0: 'class'}, inplace=True)
-    return clas
+    tree = tree.fit(X,y)
+    predict_value = tree.predict([[Gender,Age,EstimatedSalary]])
 
-user = test.drop(['Gender' , 'Age' , 'EstimatedSalary' , 'Purchased'], axis='columns')
-drop = test.drop(['User ID' , 'Purchased'], axis='columns')
+    print(test[['User ID','Gender','Age','EstimatedSalary','Purchased']])
+    return predict_value
 
-print(model_fit(user,X,y,drop))
+
+print(model_fit(X,y,0,29,135000,test))
+
+
+
+
+
 
 
 
