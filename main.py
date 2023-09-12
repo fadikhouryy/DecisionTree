@@ -5,7 +5,9 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn import metrics
 import sys
+from sklearn.metrics import accuracy_score
 
+#loading training data
 my_csv_file = sys.argv[1]
 df=pd.read_csv(my_csv_file)
 
@@ -15,43 +17,45 @@ for cols in cat_coll:
     df[cols] = encoder.fit_transform(df[cols])
 
 
+#loading data for prediction
 test_file = sys.argv[2]
-test = pd.read_csv(test_file)
-for cols in cat_coll:
-    test[cols] = encoder.fit_transform(test[cols])
+df_test = pd.read_csv(test_file)
+cat_col =['Gender']
+for cols in cat_col:
+    df_test[cols] = encoder.fit_transform(df_test[cols])
 
 
+#split the training data
+Feature = ['User ID' , 'Gender','Age','EstimatedSalary']
+X = df[Feature]
+y = df['Purchased']
 
-features = ['Gender','Age','EstimatedSalary']
-target =['Purchased']
+#train_test_split the training data
 
-X=df[features]
-y= df[target]
+X_train , X_test , y_train , y_test = train_test_split(X , y ,test_size=0.247,random_state=42)
 
+#fiting the data
+clf =DecisionTreeClassifier()
+clf.fit(X_train,y_train)
 
+#predict data
+predicted_data = clf.predict(df_test)
 
-def model_fit(X,y,Gender,Age,EstimatedSalary,test):
-    tree = DecisionTreeClassifier()
-    tree = tree.fit(X,y)
-    predict_value = tree.predict([[Gender,Age,EstimatedSalary]])
+predicted_data = pd.DataFrame(predicted_data)
 
-    print(test[['User ID','Gender','Age','EstimatedSalary','Purchased']])
-    return predict_value
+new_predicted_df =  pd.concat([df_test , predicted_data],axis=1,join="inner")
+print(new_predicted_df)
+#confusion_matrix
+confusion_matrix = metrics.confusion_matrix(y_test, predicted_data)
+cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix = confusion_matrix, display_labels = [False, True])
 
+cm_display.plot()
+plt.show()
 
-print(model_fit(X,y,0,29,135000,test))
-
-
-
-
-
-
-
-
-
-
-
-
+#store result in file
+file =open("result_file.txt",'a')
+for i in list(new_predicted_df):
+   file.write(f"{i} \n")
 
 
 
